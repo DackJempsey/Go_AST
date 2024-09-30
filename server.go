@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"fmt"
@@ -14,8 +14,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		text := r.FormValue("text")
 
 		// Do something with the text (e.g., print it)
-		fmt.Println("Received text:", text)
-
+		// fmt.Println("Received text:", text)
+        compler.Comp(text)
 	}
 
 	// Serve the HTML form
