@@ -1,9 +1,10 @@
-package main
+package server
 
 import (
 	"fmt"
 	"log"
 	"net/http"
+    "go_ast/compler"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -14,6 +15,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		// Do something with the text (e.g., print it)
 		fmt.Println("Received text:", text)
+
 	}
 
 	// Serve the HTML form

@@ -10,8 +10,8 @@ COPY . .
 RUN go mod init go_ast/go_ast
 
 # Build the Go application
-RUN go build -o server ./server
-RUN go build -o comp ./comp
+RUN go build -o server
+
 
 
 # Final stage

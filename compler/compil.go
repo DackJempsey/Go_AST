@@ -1,4 +1,4 @@
-package main
+package compler
 
 import (
     "io/ioutil"
@@ -9,7 +9,7 @@ import (
     // "time"
 )
 
-func main() {
+func comp(code string) {
     src := `
     package main
     import (
@@ -21,6 +21,7 @@ func main() {
         fmt.Println("Hello from dynamically compiled code!")
     }
     `
+    src := code
 
     tmpDir, _ := ioutil.TempDir("", "go-run")
     // Consider saving some compiled code for later analysis
