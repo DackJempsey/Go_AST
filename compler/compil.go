@@ -2,6 +2,7 @@ package compler
 
 import (
     "io/ioutil"
+    "log"
     "os"
     "os/exec"
     "path/filepath"
@@ -32,8 +33,11 @@ func Comp(code string) {
     fmt.Println("Running exec")
     
     cmd := exec.Command("go", "run", srcFile)
-    cmd.Stdout = os.Stdout
-    cmd.Stderr = os.Stderr
-    cmd.Run()
+
+    stdoutStderr, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("OUT: %s\n", stdoutStderr)
     fmt.Println("Finished Running")
 }
