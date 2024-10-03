@@ -5,78 +5,91 @@ import (
 	"log"
 	"net/http"
     "go_ast/compler"
+    "path/filepath"
+    "io/ioutil"
+    "html/template"
 )
 
+var templates *template.Template
+
 func handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+
+    comp_return := ""
+	
+    if r.Method == http.MethodPost {
 		// Parse the form data
 		r.ParseForm()
 		text := r.FormValue("text")
 
 		// Do something with the text (e.g., print it)
 		// fmt.Println("Received text:", text)
-        compler.Comp(text)
+        comp_return = compler.Comp(text)
 	}
 
 	// Serve the HTML form
-	fmt.Fprintf(w, `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>GO Sandbox</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .editor-container {
-            position: relative;
-            width: 100%%;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .editable {
-            width: 100%%;
-            height: 500px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            overflow: auto;
-            resize: vertical;
-        }
-        .submit-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Write Go Code</h1>
-    <form method="POST" action="/" onsubmit="prepareSubmission()">
-        <div class="editor-container">
-            <div class="editable" contenteditable="true" id="editor"></div>
-            <button type="submit" class="submit-button">Submit</button>
-        </div>
-        <input type="hidden" name="text" id="hiddenInput">
-    </form>
-    <script>
-        function prepareSubmission() {
-            var editorContent = document.getElementById('editor').innerText;
-            document.getElementById('hiddenInput').value = editorContent;
-        }
-    </script>
-</body>
-</html>
-        `)
+    srcFile := filepath.Join(".", "index.html")
+	data, _ := ioutil.ReadFile(srcFile)
+	fmt.Fprintf(w, string(data))
+
+    w.Header().Set("Content-Type", "text/html")
+    
+    err := templates.ExecuteTemplate(w, "results.html", comp_return)
+    if err != nil {
+        http.Error(w, "Error rendering template.", http.StatusInternalServerError)
+        log.Println("Template execution error:", err)
+    }
+}
+
+func formHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/html")
+    err := templates.ExecuteTemplate(w, "index.html", nil)
+    
+    if err != nil {
+        http.Error(w, "Error rendering template.", http.StatusInternalServerError)
+        log.Println("Template execution error:", err)
+    }
+}
+
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "Invalid request method.", http.StatusMethodNotAllowed)
+        return
+    }
+
+    // Parse the form data
+    if err := r.ParseForm(); err != nil {
+        http.Error(w, "Error parsing form data.", http.StatusBadRequest)
+        return
+    }
+
+    // Retrieve the value from the textarea
+    textboxValue := r.FormValue("textbox")
+
+    // Process the data (you can modify this part as needed)
+    processedData := processData(textboxValue)
+
+    w.Header().Set("Content-Type", "text/html")
+    err := templates.ExecuteTemplate(w, "results.html", processedData)
+    if err != nil {
+        http.Error(w, "Error rendering template.", http.StatusInternalServerError)
+        log.Println("Template execution error:", err)
+    }
+}
+
+// Dummy function to process data
+func processData(input string) string {
+    // Perform your data processing here
+    return "You entered:\n\n" + input
 }
 
 func main() {
+
+    templates = template.Must(template.ParseGlob(filepath.Join("./html_templates", "*.html")))
+
+
 	// Register the handler function for the root URL path
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", formHandler)
+    http.HandleFunc("/submit", handler)
 
 	// Start the HTTP server on port 8080
 	fmt.Println("Server is running at http://localhost:8080")

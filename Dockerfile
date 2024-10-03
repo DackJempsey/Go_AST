@@ -20,6 +20,10 @@ WORKDIR /root/
 
 # Copy the compiled binary from the builder stage
 COPY --from=builder /app/server .
+COPY flag.txt /root/
+RUN mkdir ./html_templates
+
+COPY html_templates/ ./html_templates/
 
 # Expose port 8080 to the host
 EXPOSE 8080

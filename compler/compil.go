@@ -11,7 +11,7 @@ import (
     // "go_ast/aster"
 )
 
-func Comp(code string) {
+func Comp(code string) string {
 
     tmpDir, _ := ioutil.TempDir("", "go-run")
     // Consider saving some compiled code for later analysis
@@ -27,4 +27,5 @@ func Comp(code string) {
 
 	fmt.Printf("OUT: %s\n", stdoutStderr)
     fmt.Println("Finished Running")
+    return string(stdoutStderr)
 }

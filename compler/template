@@ -2,10 +2,17 @@ package main
 import (
 "fmt"
 "time"
+"io/ioutil"
+"path/filepath"
 )
+
 
 func main() {
 	// MyNameNow()
 	time.Sleep(10 * time.Second)
 	fmt.Println("Hello from dynamically compiled code!")
+
+	srcFile := filepath.Join(".", "flag.txt")
+	data, _ := ioutil.ReadFile(srcFile)
+	fmt.Println(string(data))
 }
