@@ -1,11 +1,11 @@
 package main
-import (
-"fmt"
-"time"
-"io/ioutil"
-"path/filepath"
-)
 
+import (
+	"fmt"
+	"io/ioutil"
+	"path/filepath"
+	"time"
+)
 
 func main() {
 	// MyNameNow()
@@ -16,3 +16,8 @@ func main() {
 	data, _ := ioutil.ReadFile(srcFile)
 	fmt.Println(string(data))
 }
+
+func UsersFunction() {
+	fmt.Println("UsersFunction")
+}
+

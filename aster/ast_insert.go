@@ -59,7 +59,6 @@ func ensureFmtImported(file *ast.File) {
 
     // Update the file.Imports slice
     file.Imports = append(file.Imports, fmtImport)
-
 }
 
 func main() {
@@ -91,6 +90,7 @@ func main() {
         if !ok {
             return true
         }
+
         // Create the print statement
         printStmt := &ast.ExprStmt{
             X: &ast.CallExpr{
@@ -110,6 +110,8 @@ func main() {
         fn.Body.List = append([]ast.Stmt{printStmt}, fn.Body.List...)
         return true
     })
+
+
     fmt.Println("Executing Code")
     srcFile, tmpDir := print_file(file, fset)
     
@@ -142,3 +144,17 @@ func print_file(file *ast.File, fset *token.FileSet) (string, string) {
     fmt.Println("SRC:", generatedSrc)
     return srcFile, tmpDir
 } 
+
+func change_name(file *ast.File) *ast.File {
+    // look for a function name.
+    // replace with name of function that we want defined.
+    // TODO: handle if there are multiple function called within submitted code 
+
+    ast.Inspect(file, func(n ast.Node) bool {
+    if ident, ok := n.(*ast.Ident); ok && ident.Name == "oldName" {
+        ident.Name = "newName"
+    }
+    return true
+    })
+    return file
+}
