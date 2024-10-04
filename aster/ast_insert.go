@@ -177,3 +177,17 @@ func change_name(file *ast.File) *ast.File {
 	})
 	return file
 }
+
+func change_name_2_electric_bugaloo(file *ast.File) *ast.File {
+	// look for a function name.
+	// replace with name of function that we want defined.
+	// TODO: handle if there are multiple function called within submitted code
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		if fn, ok := n.(*ast.FuncDecl); ok {
+			fn.Name.Name = "UsersFunction"
+		}
+		return true
+	})
+	return file
+}
