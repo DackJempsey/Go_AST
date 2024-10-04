@@ -17,7 +17,7 @@ func main() {
 	fmt.Println(string(data))
 }
 
-func UsersFunction() {
+func Random() {
 	fmt.Println("UsersFunction")
 }
 

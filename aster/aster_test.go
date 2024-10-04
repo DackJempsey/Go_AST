@@ -62,19 +62,19 @@ fmt.Println("Functions:", funcs)
 
 // Printing all functions calls 
 
-// ast.Inspect(file, func(n ast.Node) bool {
-//     if call, ok := n.(*ast.CallExpr); ok {
-//         switch fun := call.Fun.(type) {
-//         case *ast.Ident:
-//             fmt.Println("Function call:", fun.Name)
-//         case *ast.SelectorExpr:
-//             if x, ok := fun.X.(*ast.Ident); ok {
-//                 fmt.Printf("Method call: %s.%s\n", x.Name, fun.Sel.Name)
-//             }
-//         }
-//     }
-//     return true
-// })
+ast.Inspect(file, func(n ast.Node) bool {
+    if call, ok := n.(*ast.CallExpr); ok {
+        switch fun := call.Fun.(type) {
+        case *ast.Ident:
+            fmt.Println("Function call:", fun.Name)
+        case *ast.SelectorExpr:
+            if x, ok := fun.X.(*ast.Ident); ok {
+                fmt.Printf("Method call: %s.%s\n", x.Name, fun.Sel.Name)
+            }
+        }
+    }
+    return true
+})
 
 
 // Change Name of functions: 
