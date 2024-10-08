@@ -2,13 +2,10 @@ package compler
 
 import (
 	"io/ioutil"
-	// "log"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
-
-	// "time"
 	"go_ast/aster"
 )
 

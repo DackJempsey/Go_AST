@@ -164,7 +164,7 @@ func print_file(file *ast.File, fset *token.FileSet) (string, string) {
 	return srcFile, tmpDir
 }
 
-func change_name(file *ast.File) *ast.File {
+func change_name_2(file *ast.File) *ast.File {
 	// look for a function name.
 	// replace with name of function that we want defined.
 	// TODO: handle if there are multiple function called within submitted code
@@ -178,14 +178,19 @@ func change_name(file *ast.File) *ast.File {
 	return file
 }
 
-func change_name_2_electric_bugaloo(file *ast.File) *ast.File {
+func change_name(file *ast.File) *ast.File {
 	// look for a function name.
 	// replace with name of function that we want defined.
 	// TODO: handle if there are multiple function called within submitted code
-
+    count := 0
 	ast.Inspect(file, func(n ast.Node) bool {
-		if fn, ok := n.(*ast.FuncDecl); ok {
+        if count >= 2 {
+            fmt.Println("More than Two Functions")
+            return false
+        }
+		if fn, ok := n.(*ast.FuncDecl); ok && fn.Name.Name != "main" {
 			fn.Name.Name = "UsersFunction"
+            count +=1
 		}
 		return true
 	})
