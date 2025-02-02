@@ -18,13 +18,19 @@ import (
 )
 
 func Fix(codePath string) (string, string) {
-
+	fmt.Println("Aster Fix")
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic:", r)
+		}
+	}()
 	code, _ := os.ReadFile(codePath)
 
 	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, "", code, parser.ParseComments)
+	file, err := parser.ParseFile(fset, "", code, parser.AllErrors)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Parser Error")
+		fmt.Println(err)
 	}
 	// Ensure imports are correct
 	ensureFmtImported(file)
@@ -42,6 +48,7 @@ func Fix(codePath string) (string, string) {
 
 func ensureFmtImported(file *ast.File) {
 	// Check if "fmt" is already imported
+	fmt.Println("Ensure Fmt Imported")
 	for _, imp := range file.Imports {
 		if imp.Path.Value == "\"fmt\"" {
 			// "fmt" is already imported

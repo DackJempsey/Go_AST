@@ -29,15 +29,16 @@ func RunReturn(srcFile string) string {
 }
 
 func Comp(user_input string) string {
+	fmt.Println("Compiling")
 	importsFile := filepath.Join("./go_templates", "imports")
 	mainFile := filepath.Join("./go_templates", "main")
-
+	
 	import_data, _ := os.ReadFile(importsFile)
 	main_data, _ := os.ReadFile(mainFile)
-
 	tmpDir, _ := ioutil.TempDir("", "go-run")
 	// Consider saving some compiled code for later analysis
 	defer os.RemoveAll(tmpDir)
+	
 	srcFile := filepath.Join(tmpDir, "main.go")
 	file, _ := os.OpenFile(srcFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
@@ -46,6 +47,7 @@ func Comp(user_input string) string {
 
 	file.WriteString(user_input)
 
+	// HERE is where the meat and potatoes happen
 	std := RunReturn(srcFile)
 
 	return std

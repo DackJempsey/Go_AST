@@ -13,6 +13,7 @@ import (
 var templates *template.Template
 
 func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Handler")
 
     comp_return := ""
 	
